@@ -1,6 +1,5 @@
 #include<stdio.h>
 
-
 void output(char in[]);
 int main()
 {
