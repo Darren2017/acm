@@ -11,7 +11,6 @@ int main()
         scanf("%d", &n[j]);
         for(i = 0; i < n[j]; i++){
             scanf("%d", &a[i]);
-            aa[i] = a[i];
         }
         int cnt = brainman(a, n[j]);
 
