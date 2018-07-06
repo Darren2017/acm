@@ -4,110 +4,86 @@
 
 using namespace std;
 
-int a[200005], in[100005], l1, r1, l2, r2;
+long long a[100005], t, m, n, k, l1, r1, l2, r2, n1, n2, n3, m1, m2, m3;
 
-double handle();
-void pre();
+void solve();
 
 int main()
 {
-    int T, m, n;
-    scanf("%d", &T);
-    for(int k = 0; k < T; k++){
-        scanf("%d %d", &n, &m);
+    scanf("%lld", &t);
+    while(t--){
+        scanf("%lld %lld", &n, &m);
         for(int i = 0; i < n; i++){
-            scanf("%d", &a[i]);
+            scanf("%lld", &a[i]);
         }
         for(int i = 0; i < m; i++){
-            scanf("%d %d %d %d",&l1, &r1, &l2, &r2);
-            printf("%.1lf\n", handle());
+            scanf("%lld %lld %lld %lld", &l1, &r1, &l2, &r2);
+            if(l1 > l2){
+                swap(l1, l2);
+                swap(r1, r2);
+            }
+            if(r1 < l2){
+                n1 = r1 - l1 + 1;
+                n2 = 0;
+                n3 = r2 - l2 + 1;
+                m1 = l1;
+                m2 = r1;
+                m3 = l2;
+                k = n1 + n2 + n3;
+            }else{
+                if(r1 > r2){
+                    swap(r1, r2);
+                }
+                n1 = l2 - l1;
+                n2 = r1 - l2 + 1;
+                n3 = r2 - r1;
+                n2 *= 2;
+                m1 = l1;
+                m2 = l2;
+                m3 = r1 + 1;
+                k = n1 + n2 + n3;
+            }
+            solve();
         }
     }
-
     return 0;
 }
 
-double handle(){
-    pre();
-    if(r1 <= l2){
-        int sum1 = r1 - l1, sum2 = r2 - l2;
-        if(sum1 > sum2){
-            return a[l1 + sum2 - 1];
-        }else if(sum2 > sum1){
-            return a[r2 - sum1 - 1];
+void solve(){
+    int mid1, mid2;
+    //printf("m---%d   n--%d, t--%d, k---%d, l1--%d, r1--%d, l2---%d, r2--%d, n1---%d, n2---%d, n3---%d, m1----%d, m2---%d, m3---%d\n",m, n, t, k, l1, r1, l2, r2, n1, n2, n3, m1, m2, m3);
+    if(k & 1){
+        mid1 = (k >> 1) + 1;
+        if(mid1 <= n1){
+            printf("%lld.0\n", a[m1 + mid1 - 1]);
+        }else if(mid1 > n1 && mid1 <= n2 + n1){
+            mid1 -= n1;
+            printf("%lld.0\n", a[m2 + ((mid1 + 1) >> 1) - 2]);
         }else{
-            return (a[r1 - 1] + a[l2 - 1]) * 1.0 / 2;
+            mid1 -= (n1 + n2);
+            printf("%lld.0\n", a[m3 + mid1 - 1]);
         }
     }else{
-        if(r2 - r1 > l2 - l1){
-            printf("_______");
-            int r = r2 - (l2 - l1);
-            int sum = 2 * (r1 - l2 + 1) + r - r1;
-            if(sum % 2 == 0){
-                return (a[l2 + sum / 2] + a[l2 + sum/ 2 + 1]) * 1.0 / 2;
-            }
+        mid1 = (k >> 1) + 1;
+        mid2 = (k >> 1);
+        if(mid1 <= n1){
+            mid1 = a[m1 + mid1 - 2];
+        }else if(mid1 > n1 && mid1 <= n2 + n1){
+            mid1 -= n1;
+            mid1 =  a[m2 + ((mid1 + 1) >> 1) - 2];
+        }else{
+            mid1 -= (n1 + n2);
+            mid1 =  a[m3 + mid1 - 2];
         }
-    }
-    return 1;
-}
-
-double handle1(){
-    // int lr = l1 > l2 ? l1 : l2, ll = l1 < l2 ? l1 : l2, rr = r1 > r2 ? r1 : r2, rl = r1 < r2 ? r1 : r2;
-    // printf("lr--%d  rl---%d", lr, rl);
-    // if(lr < rl){
-    //     int suml = lr - ll, sumr = rr - rl;
-    //     if(suml > sumr){
-    //         int l = ll + sumr;
-    //         return a[l - 1];
-    //     }if(sumr > suml){
-    //         int r = rr - suml;
-    //         return a[r - 1];
-    //     }else{
-    //         return a[(lr + rl) / 2 - 1];
-    //     }
-    // }
-    // int m1 = abs(l1 - l2), m2 = abs(r1 - r2), sum = r1 < r2 ? r1 : r2 - l2 > l1 ? l2 : l1;
-    // sum *= 2;
-    // if(m1 > m2){
-    //     int l = l1 < l2 ? l1 : l2;
-    //     int sum1 = l1 > l2 ? l1 : l2 - l;
-    //     if(sum1 > sum){
-    //         return a[l + sum - 1];
-    //     }else if(sum > sum1){
-    //         int r = r1 < r2 ? r1 : r2 - (sum - sum1);
-    //     }
-    //     l += m2;
-
-    // }else if(m2 > m1){
-    //     sum += m2 - m1;
-    //     int r = r1 < r2 ? r1 : r2;
-    // }else{
-    //     return a[sum / 4];
-    // }
-    // int cnt = 0;
-    // for(int i = l1; i <= r1; i++){
-    //     a[cnt++] = in[i - 1];
-    // }
-    // for(int i = l2; i <= r2; i++){
-    //     a[cnt++] = in[i - 1];
-    // }
-    // sort(a, a + cnt);
-    // if(cnt % 2){
-    //     median = a[cnt / 2];
-    // }else{
-    //     median = (a[cnt / 2] + a[cnt / 2 - 1]) * 1.0 / 2;
-    // }
-    printf("--------");
-    return 1;
-}
-
-void pre(){
-    if(l2 <= l1 && r2 <= l1){
-        int t = l1;
-        l1 = l2;
-        l2 = t;
-        t = r1;
-        r1 = r2;
-        r2 =t;
+        if(mid2 <= n1){
+            mid2 = a[m1 + mid2 - 2];
+        }else if(mid2 > n1 && mid2 <= n2 + n1){
+            mid2 -= n1;
+            mid2 =  a[m2 + ((mid2 + 1) >> 1) - 2];
+        }else{
+            mid2 -= (n1 + n2);
+            mid2 =  a[m3 + mid2 - 2];
+        }
+        printf("%.1lf\n", ((double )mid1 + mid2) / 2);
     }
 }
