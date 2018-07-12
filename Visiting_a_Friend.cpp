@@ -1,72 +1,61 @@
-// #include<iostream>
-// #include<stdlib.h>
-
-// using namespace std;
-
-// struct tele{
-//     int x;
-//     int y;
-// }tele[103];
-// int n, m, v[103] = {0};
-
-// bool solve(int now);
-
-// int main()
-// {
-//     scanf("%d %d", &n, &m);
-//     for(int i = 0; i < n; i++){
-//         scanf("%d %d", &tele[i].x, &tele[i].y);
-//     }
-//     v[0] = 1;
-//     if(solve(0)){
-//         printf("YES\n");
-//     }else{
-//         printf("NO\n");
-//     }
-
-//     return 0;
-// }
-
-// bool solve(int now){
-//     if(tele[now].x <= m && tele[now].y >= m){
-//         printf("YES\n");
-//         exit(0);
-//     }else{
-//         for(int i = now + 1; i < n && tele[i].x <= tele[now].y && v[i] == 0; i++){
-//             v[i] = 1;
-//             solve(i);
-//         }
-//     }
-//     return false;
-// }
-
-
 #include<iostream>
+#include<algorithm>
+#include<string.h>
 
 using namespace std;
 
-int v[104] = {0};
+int n, a, b[1000006], v[1000006], mcnt, len;
+bool flag;
+
+bool cmp(int a, int b);
+void dfs(int x, int cnt);
 
 int main()
 {
-    int n, m, x, y;
-    cin >> n >> m;
-    for(int i = 0; i < n; i++){
-        cin >> x >> y;
-        if(y == m){
-            v[y] = 1;
+    int T;
+    cin >> T;
+    while(T--){
+        mcnt = 9999999, flag = false;
+        memset(v, 0, sizeof(v));
+        cin >> n >> a;
+        for(len = 0; len < n; len++){
+            scanf("%d", &b[len]);
         }
-        for(int i = x; i < y; i++){
-            v[i] = 1;
+        sort(b, b + len, cmp);
+        v[0] = 1;
+        dfs(a, 0);
+        if(flag){
+            printf("%d\n", mcnt);
+        }else{
+            printf("-1\n");
         }
     }
-    for(int i = 0; i <= m; i++){
-        if(v[i] == 0){
-            printf("No\n");
-            return 0;
-        }
-    }
-    printf("Yes\n");
     return 0;
+}
 
+bool cmp(int a, int b){
+    if(a > b){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+void dfs(int x, int cnt){
+    if(x == 0){
+        mcnt = min(mcnt, cnt);
+        flag = true;
+    }else{
+        int i;
+        for(i = 0; i < len; i++){
+            if(b[i] <= x){
+                break;
+            }
+        }
+        for(; i < len; i++){
+            cnt++;
+            dfs((x % b[i]), cnt);
+            cnt--;
+        }
+    }
 }
